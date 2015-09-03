@@ -83,6 +83,15 @@ class bTree:
                 print "Parent already has right child"
             else:
                 Node.right = node(integer)
+    def delete(self,integer):
+        Node = self.search(integer)
+        if Node != None:
+            if(Node.right == None and Node.left == None):
+                Node.key = None
+            else:
+                print "Node not deleted has children"
+        else:
+            print "Node not found"
 
     def printTree(self):
         if(self.root != None):
@@ -112,7 +121,7 @@ def main():
     tree.add(1,2)
     tree.add(6,2)
     tree.add(1,2)
-    tree.add(4,9)
+    tree.delete(1)
     tree.printTree()
 
 
