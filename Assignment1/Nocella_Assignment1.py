@@ -5,7 +5,8 @@ import Queue
 #Implement integer queue using python's queue module
 
 
-#TODO not sure exactly what professor wants for this question
+
+
 
 #implement a basic integer stack
 
@@ -103,26 +104,88 @@ class bTree:
             print str(Node.key) + ' '
             self._printTree(Node.right)
 
+#Implement a unweighted graph using dictionary
 
+class graph:
+    def __init__(self):
+        self.start = {}
 
+    def addVertex(self,integer):
+        if self.start.has_key(integer):
+            print "Vertex already exists"
+        else:
+            self.start.update({integer: []})
 
+    def addEdge(self,integer1, integer2):
+        if self.start.has_key(integer1) and self.start.has_key(integer2):
+            self.start[integer1].append(integer2)
+            self.start[integer2].append(integer1)
 
+        else:
+            print "One or more vertices not found"
+
+    def findVertex(self,integer):
+        if self.start.has_key(integer):
+            print self.start.get(integer)
 
 
 def main():
-    myStack = stack(128)
-    myStack.push(12)
-    myStack.push(13)
-    myStack.checksize()
-    myStack.pop()
-    myStack.checksize()
-    tree = bTree(2)
-    tree.add(5,2)
-    tree.add(1,2)
-    tree.add(6,2)
-    tree.add(1,2)
-    tree.delete(1)
-    tree.printTree()
+
+    #test queue
+    print "Testing queue module"
+    myQueue = Queue.Queue()
+    list = [1,2,3,4,5,6,7,8,9,10]
+    for integer in list:
+        myQueue.put(integer)
+    for integer in range(1,11):
+        print myQueue.get(integer)
+
+    #test stack
+    print "Testing stack class"
+    myStack = stack(20)
+    for integer in list:
+        myStack.push(integer)
+    for integer in range(1,11):
+        myStack.pop()
+
+
+    #test bTree
+    myBTree = bTree(1)
+    myBTree.add(3,1)
+    myBTree.add(2,1)
+    myBTree.add(5,2)
+    myBTree.add(1,2)
+
+
+    #test graph
+    print "Testing graph class"
+    myGraph = graph()
+    for integer in list:
+        myGraph.addVertex(integer)
+    myGraph.addEdge(1,2)
+    myGraph.addEdge(1,3)
+    myGraph.addEdge(1,4)
+    myGraph.addEdge(2,3)
+    myGraph.addEdge(2,5)
+    myGraph.addEdge(2,9)
+    myGraph.addEdge(3,7)
+    myGraph.addEdge(3,10)
+    myGraph.addEdge(4,6)
+    myGraph.addEdge(5,6)
+    myGraph.addEdge(5,6)
+    myGraph.addEdge(5,7)
+    myGraph.addEdge(6,9)
+    myGraph.addEdge(9,10)
+    myGraph.addEdge(9,1)
+    myGraph.addEdge(7,8)
+    myGraph.addEdge(8,9)
+    myGraph.addEdge(8,1)
+    myGraph.addEdge(8,2)
+    myGraph.addEdge(8,4)
+    print myGraph.start
+
+    for integer in range(1,6):
+        myGraph.findVertex(integer)
 
 
 main()
