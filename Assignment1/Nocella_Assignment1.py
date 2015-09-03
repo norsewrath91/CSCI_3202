@@ -48,37 +48,51 @@ class node:
         self.left = None
         self.right = None
         self.parent = None
-        self.intKey = integer
+        self.key = integer
 
 class bTree:
     def __init__(self,integer):
-        #the way the assignmnet is written it seems you should not be able to instantiate an empty btree unless you want constant parent not found messages :P
         self.root = node(integer)
+
     def search(self,integer):
-        self._search(integer,self.root)
+        Node = self.root
+        while Node !=None:
+            if Node.key == integer:
+                return Node
+            if Node.key > integer:
+                Node = Node.left
+            else:
+                Node = Node.right
+        return None
 
-    def _search(self, integer, node):
-        if (integer == node.intKey):
-            return node
-        elif (integer < node.intKey and node.left != None):
-            self._search(integer, node.left)
-        elif (integer > node.intKey and node.right !=None):
-            self._search(integer, node.right)
-
-    def add(self,integer, parent):
-        if self.search(parent) != None:
-             self._add(integer, node)
+    def add(self, integer, parent):
+        Node = self.search(parent)
+        if Node != None:
+            self._add(integer,Node)
         else:
-            print "Parent not found"
-    def _add(self, integer, node):
-        if (integer < node.intKey):
+            print "Parent not Found"
 
+    def _add(self, integer, Node):
+        if(integer < Node.key):
+            if(Node.left != None):
+                print "Parent already has left child"
+            else:
+                Node.left = node(integer)
+        else:
+            if(Node.right != None):
+                print "Parent already has right child"
+            else:
+                Node.right = node(integer)
 
+    def printTree(self):
+        if(self.root != None):
+            self._printTree(self.root)
 
-
-
-
-
+    def _printTree(self, Node):
+        if(Node != None):
+            self._printTree(Node.left)
+            print str(Node.key) + ' '
+            self._printTree(Node.right)
 
 
 
@@ -93,5 +107,13 @@ def main():
     myStack.checksize()
     myStack.pop()
     myStack.checksize()
+    tree = bTree(2)
+    tree.add(5,2)
+    tree.add(1,2)
+    tree.add(6,2)
+    tree.add(1,2)
+    tree.add(4,9)
+    tree.printTree()
+
 
 main()
