@@ -5,9 +5,6 @@ import Queue
 #Implement integer queue using python's queue module
 
 
-
-
-
 #implement a basic integer stack
 
 class stack:
@@ -56,15 +53,18 @@ class bTree:
         self.root = node(integer)
 
     def search(self,integer):
-        Node = self.root
-        while Node !=None:
-            if Node.key == integer:
-                return Node
-            if Node.key > integer:
-                Node = Node.left
-            else:
-                Node = Node.right
-        return None
+        return self._search(integer,self.root)
+
+    def _search(self,integer,Node):
+
+         if Node.key == integer:
+            return Node
+         else:
+            if Node.left is not None:
+               return self._search(integer, Node.left)
+            if Node.right is not None:
+                return self._search(integer,Node.right)
+
 
     def add(self, integer, parent):
         Node = self.search(parent)
@@ -74,16 +74,15 @@ class bTree:
             print "Parent not Found"
 
     def _add(self, integer, Node):
-        if(integer < Node.key):
-            if(Node.left != None):
-                print "Parent already has left child"
-            else:
-                Node.left = node(integer)
+        if(Node.left == None):
+            Node.left = node(integer)
+        elif(Node.left != None and Node.right == None):
+            Node.right = node(integer)
         else:
-            if(Node.right != None):
-                print "Parent already has right child"
-            else:
-                Node.right = node(integer)
+            print "Parent already has two children"
+
+
+
     def delete(self,integer):
         Node = self.search(integer)
         if Node != None:
@@ -150,11 +149,27 @@ def main():
 
 
     #test bTree
+    print "Testing Btree"
     myBTree = bTree(1)
     myBTree.add(3,1)
-    myBTree.add(2,1)
-    myBTree.add(5,2)
-    myBTree.add(1,2)
+    myBTree.add(4,1)
+    #check add to parent node with two children
+    #myBTree.add(5,1)
+    #check add to a none existing parent node
+    #myBTree.add(9,10)
+    #check add to children nodes
+    myBTree.add(5,3)
+    myBTree.add(6,3)
+    myBTree.add(12,5)
+    myBTree.add(14,5)
+    myBTree.add(13,12)
+    myBTree.add(22,13)
+    myBTree.add(20,13)
+    myBTree.printTree()
+    myBTree.delete(20)
+    myBTree.delete(22)
+    myBTree.printTree()
+
 
 
     #test graph
@@ -172,7 +187,7 @@ def main():
     myGraph.addEdge(3,10)
     myGraph.addEdge(4,6)
     myGraph.addEdge(5,6)
-    myGraph.addEdge(5,6)
+    myGraph.addEdge(5,10)
     myGraph.addEdge(5,7)
     myGraph.addEdge(6,9)
     myGraph.addEdge(9,10)
