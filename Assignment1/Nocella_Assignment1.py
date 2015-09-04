@@ -154,9 +154,9 @@ def main():
     myBTree.add(3,1)
     myBTree.add(4,1)
     #check add to parent node with two children
-    #myBTree.add(5,1)
+    myBTree.add(5,1)
     #check add to a none existing parent node
-    #myBTree.add(9,10)
+    myBTree.add(9,10)
     #check add to children nodes
     myBTree.add(5,3)
     myBTree.add(6,3)
