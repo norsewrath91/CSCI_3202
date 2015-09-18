@@ -68,12 +68,12 @@ class aStar():
     def displayPath(self):
         print "Total Cost:"
         print self.end.f
-        print "The path taken from Start to End"
+        print "The path traced from end to start"
         Node = self.end
         while Node.parent is not self.start:
             Node = Node.parent
             print 'Node: (%d %d)' % (Node.y,Node.x)
-        
+
 
 
     def manhattanHeuristic(self,Node):
