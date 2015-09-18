@@ -1,13 +1,21 @@
-import sys
+import argparse
 import heapq
+__author__ = "Nicholas Nocella"
+
 
 def main():
-    world = open("World1.txt",'r')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("world", help ="The world matrix you want to use as a .txt file", type=argparse.FileType('r'))
+    parser.add_argument("gridHeight", help="The height of your matrix integer vale", type=int)
+    parser.add_argument("gridWidth", help="The width of your matrix integer value", type=int)
+    args = parser.parse_args()
+
+    world = args.world
     worldMatrix = []
     for line in world.readlines():
         worldMatrix.append(line.split())
 
-    a = aStar(8,10,worldMatrix)
+    a = aStar(args.gridHeight,args.gridWidth,worldMatrix)
     a.initMap()
     a.mainProcess()
 
