@@ -72,6 +72,8 @@ class aStar():
         #computer the heruistic value for a cell, the manhattan distance
         return abs(Node.x - self.end.x) + abs(Node.y - self.end.y)
 
+    #def straightLineHeuristic
+
     def compare(self, node1, node2):
 
         if node1.f < node2.f:
