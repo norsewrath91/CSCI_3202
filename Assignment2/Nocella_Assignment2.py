@@ -1,5 +1,6 @@
 import argparse
 import heapq
+import math
 __author__ = "Nicholas Nocella"
 
 
@@ -8,6 +9,7 @@ def main():
     parser.add_argument("world", help ="The world matrix you want to use as a .txt file", type=argparse.FileType('r'))
     parser.add_argument("gridHeight", help="The height of your matrix integer vale", type=int)
     parser.add_argument("gridWidth", help="The width of your matrix integer value", type=int)
+    parser.add_argument("heuristic", help="Straight Line or Manhattan Distance Heuristic")
     args = parser.parse_args()
 
     world = args.world
@@ -15,7 +17,7 @@ def main():
     for line in world.readlines():
         worldMatrix.append(line.split())
 
-    a = aStar(args.gridHeight,args.gridWidth,worldMatrix)
+    a = aStar(args.gridHeight,args.gridWidth,worldMatrix, args.heuristic)
     a.initMap()
     a.mainProcess()
 
@@ -35,7 +37,7 @@ class node():
 
 
 class aStar():
-    def __init__(self,height,width,matrix):
+    def __init__(self,height,width,matrix, heuristic):
         self.openedList = []
         heapq.heapify(self.openedList)
         self.closedList = set()
@@ -43,6 +45,7 @@ class aStar():
         self.gridWidth = width
         self.nodes = []
         self.world = matrix
+        self.heuristic = heuristic
 
 
     def initMap(self):
@@ -72,7 +75,8 @@ class aStar():
         #computer the heruistic value for a cell, the manhattan distance
         return abs(Node.x - self.end.x) + abs(Node.y - self.end.y)
 
-    #def straightLineHeuristic
+    def straightLineHeuristic(self,Node):
+        return math.sqrt(math.pow((Node.x - self.end.x),2) + math.pow((Node.y-self.end.y),2))
 
     def compare(self, node1, node2):
 
@@ -128,8 +132,10 @@ class aStar():
                 adjNode.g = Node.g +24
             else:
                 adjNode.g = Node.g +14
-
-            adjNode.h = self.manhattanHeuristic(adjNode)
+            if self.heuristic == "manhattan":
+                adjNode.h = self.manhattanHeuristic(adjNode)
+            elif self.heuristic == "straight":
+                adjNode.h = self.straightLineHeuristic(adjNode)
             adjNode.parent = Node
             adjNode.f = adjNode.h + adjNode.g
 
@@ -138,7 +144,10 @@ class aStar():
                 adjNode.g = Node.g +20
             else:
                 adjNode.g = Node.g +10
-            adjNode.h = self.manhattanHeuristic(adjNode)
+            if self.heuristic == "manhattan":
+                adjNode.h = self.manhattanHeuristic(adjNode)
+            elif self.heuristic == "straight":
+                adjNode.h = self.straightLineHeuristic(adjNode)
             adjNode.parent = Node
             adjNode.f = adjNode.h + adjNode.g
 
