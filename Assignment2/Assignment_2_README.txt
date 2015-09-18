@@ -2,7 +2,7 @@ For this program to work properly you will need to do the following:
 
 Create world.txt
 
-This file is your 8x10 grid maze, and should look like this
+This file is your grid maze, and should look like this
 
 0 0 0 0 1 0 1 1 0 0
 0 2 1 1 0 0 2 0 2 0
@@ -16,6 +16,7 @@ This file is your 8x10 grid maze, and should look like this
 
 The matrix positions are actually flipped (y,x) so the (0,0) is actually the top left corner.
 The start position is the bottom left corner (0,7) and the goal position is  the top right corner(9,0).
+The start positions will always be bottom left and top right corners.
 
 Place the world.txt file in the working directory of the project.
 
