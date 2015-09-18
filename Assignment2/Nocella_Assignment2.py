@@ -46,6 +46,7 @@ class aStar():
         self.nodes = []
         self.world = matrix
         self.heuristic = heuristic
+        self.totalCost =0
 
 
     def initMap(self):
@@ -65,10 +66,15 @@ class aStar():
         return self.nodes[y * self.gridWidth + x]
 
     def displayPath(self):
+        print "Total Cost:"
+        print self.end.f
+        print "The path taken from Start (7 0) to End (0 9):"
+        print "Node: (0 9)"
         Node = self.end
         while Node.parent is not self.start:
             Node = Node.parent
-            print 'path: Node: %d %d' % (Node.y,Node.x)
+            print 'Node: (%d %d)' % (Node.y,Node.x)
+        print "Node: (7 0)"
 
 
     def manhattanHeuristic(self,Node):
@@ -78,20 +84,11 @@ class aStar():
     def straightLineHeuristic(self,Node):
         return math.sqrt(math.pow((Node.x - self.end.x),2) + math.pow((Node.y-self.end.y),2))
 
-    def compare(self, node1, node2):
-
-        if node1.f < node2.f:
-            return -1
-        elif node1.f > node2.f:
-            return 1
-        return 0
-
     def getAdjNodes(self,node):
         #Returns adjacent cells in clockwise order starting from right
         #updates if the node if diagonal
         Nodes = []
         if node.x < self.gridWidth-1:
-
             Nodes.append(self.getNode(node.y,node.x+1))
 
         if node.x < self.gridWidth-1 and node.y < self.gridHeight-1:
@@ -99,26 +96,20 @@ class aStar():
             Nodes.append(self.getNode(node.y+1,node.x+1))
 
         if node.y < self.gridHeight-1:
-
             Nodes.append(self.getNode(node.y+1,node.x))
-
 
         if node.x > 0 and node.y < self.gridHeight-1:
             self.getNode(node.y+1,node.x-1).diagonal = True
             Nodes.append(self.getNode(node.y+1,node.x-1))
 
-
         if node.x > 0:
-
             Nodes.append(self.getNode(node.y,node.x-1))
-
 
         if node.x > 0 and node.y > 0:
             self.getNode(node.y-1,node.x-1).daigonal = True
             Nodes.append(self.getNode(node.y-1,node.x-1))
 
         if node.y > 0:
-
             Nodes.append(self.getNode(node.y-1,node.x))
 
         if node.y > 0 and node.x < self.gridWidth-1:
@@ -155,8 +146,10 @@ class aStar():
         #push starting node to open list
         heapq.heappush(self.openedList,(self.start.f,self.start))
         while len(self.openedList):
+            #pop node from queue and add node to closed list
             f, node = heapq.heappop(self.openedList)
             self.closedList.add(node)
+            #if we are at the end display the path that got us there
             if node is self.end:
                 self.displayPath()
                 break
