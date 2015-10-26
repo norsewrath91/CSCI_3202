@@ -49,10 +49,6 @@ class bayesNetwork():
             (self.cancer.probabilities['c|p~s']* self.calcMarginal('p')* self.calcMarginal('~s'))
         elif var == '~c':
             return 1 - self.calcMarginal('c')
-            '''(self.cancer.probabilities['~c|~ps']* self.calcMarginal('~p')* self.calcMarginal('s'))+ \
-            (self.cancer.probabilities['~c|~p~s']* self.calcMarginal('~p')* self.calcMarginal('~s'))+ \
-            (self.cancer.probabilities['~c|ps']* self.calcMarginal('p')* self.calcMarginal('s'))+ \
-            (self.cancer.probabilities['~c|p~s']* self.calcMarginal('p')* self.calcMarginal('~s'))'''
         elif var == 'x':
             return self.xRay.probabilities['x|c']* self.calcMarginal('c')+ \
             self.xRay.probabilities['x|~c']* self.calcMarginal('~c')
@@ -101,25 +97,8 @@ class bayesNetwork():
 
 
 
-    def calcJoint(self,a,b):
-        #calculate a|b
-        if b == 'd' or b == '~d' or b == 'x' or b =='~b':
-            return diagnostic(self,a,b)
 
         #I know how to calculate these but its getting too late - Also know how to do conditionals but it would take  too long
-        
-
-    def diagnostic(self,a,b):
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -127,8 +106,9 @@ class bayesNetwork():
 
 class node():
     def __init__(self, name):
-        self.probabilities = {}
+        self.prob = {}
         self.parents = []
+        self.children =[]
         self.name = name
 
 class network:
@@ -145,12 +125,6 @@ class network:
     def findVertex(self,node):
         if self.start.has_key(node):
             print self.start.get(node)
-
-
-
-
-
-
 
 
 
