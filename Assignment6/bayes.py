@@ -7,129 +7,109 @@ __author__ = 'Nick'
 class bayesNetwork():
     def __init__(self):
         #initialize our network and nodes with probabilities
-        self.net = network()
+        self.net ={ \
+        'P':{'P':.9,'p':.1,'children':'C'},\
 
-        self.P = node('P')
-        self.C = node('C')
-        self.S = node('S')
-        self.X = node('X')
-        self.D = node('D')
+        'S' : {'S':.3,'s':.7, 'children':'C'},\
 
-        self.P.prob = {'P':.9,'p':.1}
-        self.P.children = [self.C]
+        'C': {'pSC': .05, 'psC': .02, 'PSC': .03, 'PsC': .001, 'pSc': .95, 'psc': .98, 'PSc': .97, 'Psc': .999,  'parents':['P','p', 'S', 's'], 'children':['X','D']},\
 
+        'X': {'CX': .9, 'cX': .2, 'Cx': .1, 'cx': .8, 'parents':['C','c']},\
 
-        self.S.prob = {'S':.3,'s':.7}
-        self.S.children = [self.C]
-
-
-        self.C.parents =[self.S, self.P]
-        self.C.children = {self.D, self.X}
-        self.C.prob = {'pSC': .05, 'psC': .02, 'PSC': .03, 'PsC': .001, 'pSc': .95, 'psc': .98, 'PSc': .97, 'Psc': .999}
-
-
-        self.X.prob = {'CX': .9, 'cX': .2, 'Cx': .1, 'cx': .8}
-        self.X.parents = [self.C]
-
-
-        self.D.prob = {'CD': .65, 'cD': .3, 'Cd': .35, 'cd': .7}
-        self.D.parents = [self.C]
-
-        self.net.addVertex(self.P)
-        self.net.addVertex(self.S)
-        self.net.addVertex(self.C)
-        self.net.addVertex(self.X)
-        self.net.addVertex(self.D)
-        self.net.addEdge(self.P, self.C)
-        self.net.addEdge(self.S, self.C)
-        self.net.addEdge(self.C, self.X)
-        self.net.addEdge(self.C, self.D)
-    def getS(self):
-        return self.S
-    def getP(self):
-        return self.P
-    def getC(self):
-        return self.C
-    def getX(self):
-        return self.X
-    def getD(self):
-        return self.D
+        'D': {'CD': .65, 'cD': .3, 'Cd': .35, 'cd': .7, 'parents':['C','c']}}
 
     def calcMarginal(self, event):
         #returns P(var) with given CPD tables
         if event == 'P':
-            return self.P.prob['P']
+            return self.net['P']['P']
         elif event =="p":
-            return self.P.prob['p']
+            return self.net['P']['p']
         if event == 'S':
-            return self.S.prob['S']
+            return self.net['S']['S']
         elif event == 's':
-            return self.S.prob['s']
+            return self.net['S']['s']
         elif event == 'C':
-            return (self.C.prob['pSC']* self.calcMarginal('p')* self.calcMarginal('S'))+ \
-            (self.C.prob['psC']* self.calcMarginal('p')* self.calcMarginal('s'))+ \
-            (self.C.prob['PSC']* self.calcMarginal('P')* self.calcMarginal('S'))+ \
-            (self.C.prob['PsC']* self.calcMarginal('P')* self.calcMarginal('s'))
+            return (self.net['C']['pSC']* self.calcMarginal('p') * self.calcMarginal('S')) + \
+            (self.net['C']['psC'] * self.calcMarginal('p') * self.calcMarginal('s')) + \
+            (self.net['C']['PSC'] * self.calcMarginal('P') * self.calcMarginal('S')) + \
+            (self.net['C']['PsC'] * self.calcMarginal('P') * self.calcMarginal('s'))
         elif event == 'c':
             return 1 - self.calcMarginal('C')
         elif event == 'X':
-            return self.X.prob['CX']* self.calcMarginal('C')+ \
-            self.X.prob['cX']* self.calcMarginal('c')
+            return self.net['X']['CX'] * self.calcMarginal('C') + \
+            self.net['X']['cX'] * self.calcMarginal('c')
         elif event == 'x':
             return 1 - self.calcMarginal('X')
         elif event == 'D':
-            return self.D.prob['CD']* self.calcMarginal('C')+ \
-            self.D.prob['cD']* self.calcMarginal('c')
+            return self.net['D']['CD']* self.calcMarginal('C') + \
+            self.net['D']['cD'] * self.calcMarginal('c')
         elif event == 'd':
             return 1 - self.calcMarginal('D')
-
+'''
     def calcJoint(self, eventString):
         #eventString must contain the RV of the Bayes Net in this linearization (P,S,C,X,D)
         #You can omit a RV but never reorder them (eg. PsX is fine. SDX is not)
         #Also eventString must contain 2 RV otherwise just calculate the marginal
         jointProb = 1
+        tempProb = 0
+        temp = ''
+
         eventArray = list(eventString)
-        eventArray.reverse()
-        for event in eventArray:
+        reverseArray = eventArray.reverse()
+        for event in reverseArray:
             eventUpper = event.upper()
             #We know that the event is in the bayes net so lets check to see if the event has parents and if those parents are also part of the joint probably calculation
-            if self.eventUpper.parents != None:
-                for parent in self.eventUpper.parents:
+            if self.net[eventUpper] == 'C':
+                for parent in self.net['C']['parents']:
                     if parent in eventArray:
-                        #We need to multiply the joint probably by P(event|parent)
-                        self.eventUpper.prob[event + parent] *= jointProb
+                        temp += parent
+                        tempProb *= self.net[parent.upper()][parent]
 
+                if len(temp) == 2:
+                    temp += event
+                    jointProb *= self.net['C'][temp] * tempProb
+                elif len(temp == 1):
+                    if temp == 'S':
+                        jointProb *= (self.net['P']['p'] * self.net['S']['S'] * self.net['C']['pSC'] + self.net['P']['P'] * self.net['S']['S'] * self.net['C']['PSC'])
+                    elif temp =='s':
+                        jointProb *= (self.net['P']['p'] * self.net['S']['s'] * self.net['C']['psC'] + self.net['P']['P'] * self.net['S']['s'] * self.net['C']['PsC'])
+                    elif temp =='p':
+                        jointProb *= (self.net['P']['p'] * self.net['S']['S'] * self.net['C']['pSC'] + self.net['P']['p'] * self.net['S']['s'] * self.net['C']['psC'])
+                    elif temp =='P':
+                        jointProb *= (self.net['P']['p'] * self.net['S']['S'] * self.net['C']['PSC'] + self.net['P']['P'] * self.net['S']['s'] * self.net['C']['PsC'])
+                else:
+                    jointProb *= self.calcMarginal(event)
+
+            elif self.net[eventUpper] == 'D':
+                for parent in self.net['D']['parents']:
+                    if parent in eventArray:
+                        jointProb *= self.net['D'][parent+event]
+                    else:
+                        jointProb *= self.calcMarginal(event)
+            elif self.net[eventUpper] == 'X':
+                for parent in self.net['X']['parents']:
+                    if parent in eventArray:
+                        jointProb *= self.net['X'][parent+event]
+                    else:
+                        jointProb *= self.calcMarginal(event)
             else:
-                #If an event does not have a parent or the parent is not part of the joint that means this event will be independent(or conditionally independent) of the other events
-                #so we grab the marginal for the joint
                 jointProb *= self.calcMarginal(event)
-        return jointProb
 
-class node():
-    def __init__(self, name):
-        self.prob = {}
-        self.parents = None
-        self.children = None
-        self.probabilities = {}
-        self.parents = []
+    def test(self):
+        array = list('PSC')
+        temp = ''
+        print array
+        print self.net['C']['parents']
+        for char in array:
+            if char in self.net['C']['parents']:
+                temp += char
+'''
 
-
-class network:
-    def __init__(self):
-        self.start = {}
-    def addVertex(self,node):
-            self.start.update({node: []})
-    def addEdge(self,node1, node2):
-        if self.start.has_key(node1) and self.start.has_key(node2):
-            self.start[node1] = node2
-    def findVertex(self,node):
-        if self.start.has_key(node):
-            print self.start.get(node)
-            print self.start.get(node)
 
 def main():
     test = bayesNetwork()
-    print test.calcJoint('SP')
+    print test.calcMarginal('D')
+    print test.test()
 
 
 
