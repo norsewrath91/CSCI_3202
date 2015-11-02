@@ -3,9 +3,14 @@ __author__ = 'Nick'
 
 class node():
     def __init__(self, name):
+<<<<<<< Updated upstream
         self.prob = {}
+        self.parents = None
+        self.children = None
+=======
+        self.probabilities = {}
         self.parents = []
-        self.children =[]
+>>>>>>> Stashed changes
         self.name = name
 
 class network:
@@ -21,4 +26,8 @@ class network:
 
     def findVertex(self,node):
         if self.start.has_key(node):
+<<<<<<< Updated upstream
             print self.start.get(node)
+=======
+            print self.start.get(node)
+>>>>>>> Stashed changes

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/CSCI_3202.iml" filepath="$PROJECT_DIR$/.idea/CSCI_3202.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Nocella_CSCI3202_Assignment1.iml" filepath="$PROJECT_DIR$/.idea/Nocella_CSCI3202_Assignment1.iml" />
     </modules>
   </component>

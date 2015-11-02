@@ -67,13 +67,16 @@ class aStar():
 
     def displayPath(self):
         print "Total Cost:"
-        print self.end.f
+        print self.end.g
         print "The path traced from end to start"
         Node = self.end
         while Node.parent is not self.start:
             Node = Node.parent
             print 'Node: (%d %d)' % (Node.y,Node.x)
 
+        print 'Here is the set of nodes searched:'
+        for thing in self.closedList:
+            print 'Node: (%d %d)' % (thing.y,thing.x)
 
 
     def manhattanHeuristic(self,Node):
@@ -84,7 +87,7 @@ class aStar():
         return math.sqrt(math.pow((Node.x - self.end.x),2) + math.pow((Node.y-self.end.y),2))
 
     def getAdjNodes(self,node):
-        #Returns adjacent cells in clockwise order starting from right
+        #Returns adjacent cells in clockwise order starting from right in an array
         #updates if the node if diagonal
         Nodes = []
         if node.x < self.gridWidth-1:
@@ -118,6 +121,7 @@ class aStar():
         return Nodes
 
     def updateDiagonalNode(self,adjNode,Node):
+        #updates adjacent cells that are horizontal or vertical
             if self.world[adjNode.y][adjNode.x] == "1":
                 adjNode.g = Node.g +24
             else:
@@ -130,6 +134,7 @@ class aStar():
             adjNode.f = adjNode.h + adjNode.g
 
     def updateNode(self,adjNode,Node):
+        #same but for diagonals (probably a better way to do this)
             if self.world[adjNode.y][adjNode.x] == "1":
                 adjNode.g = Node.g +20
             else:
@@ -147,14 +152,18 @@ class aStar():
         while len(self.openedList):
             #pop node from queue and add node to closed list
             f, node = heapq.heappop(self.openedList)
+            #add cell to closed set
             self.closedList.add(node)
             #if we are at the end display the path that got us there
             if node is self.end:
                 self.displayPath()
                 break
+            #otherwise get the adjacent nodes
             adjNodes = self.getAdjNodes(node)
             for adjNode in adjNodes:
                 if adjNode.reachable != False and adjNode not in self.closedList:
+                    #if adjacent node in opened list check if current path is better than previous
+                    #the update that cell
                     if(adjNode.f,adjNode) in self.openedList:
                         if adjNode.diagonal == True:
                             if adjNode.g > node.g +14:
@@ -167,6 +176,7 @@ class aStar():
                             self.updateDiagonalNode(adjNode,node)
                         else:
                             self.updateNode(adjNode,node)
+                        #add adjacent cell to opened list
                         heapq.heappush(self.openedList,(adjNode.f,adjNode))
 
 
