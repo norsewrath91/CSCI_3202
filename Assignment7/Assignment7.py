@@ -11,6 +11,7 @@ sampleArray = [0.82,	0.56,	0.08,	0.81,	0.34, 0.22, 0.37, 0.99, 0.55, 0.61, 0.31,
 0.9,	0.0,	0.91,	0.01]
 
 
+
 def prior():
     #list of [couldy,rain,sprinkler,wetgrass] samples
     samples = []
@@ -217,7 +218,66 @@ def rejection3():
     print (sprinklerWetGrassCount/total)/(wetGrassCount/total)
 
 def rejection4():
-    return None
+    cloudy = False
+    sprinkler = False
+    rain = False
+    cloudySrinklerWetGrass = 0
+    cloudyWetGrass = 0
+    count = 0
+    count2 = 100
+    total = 0.0
+
+    while count < 100 and count2 > 4:
+        if sampleArray[count] < 0.5:
+            cloudy = True
+        count += 1
+        count2 -= 1
+
+        if cloudy == True:
+            if sampleArray[count] < 0.1:
+                sprinkler = True
+            if sampleArray[count + 1] < 0.8:
+                rain = True
+        else: #cloudy = False
+            if sampleArray[count] < 0.5:
+                sprinkler = True
+            if sampleArray[count + 1] < 0.2:
+                rain = True
+        count += 2
+        count2 -= 2
+
+        if sprinkler == True and rain == True:
+            if sampleArray[count] < 0.99:
+                if cloudy == True:
+                    cloudySrinklerWetGrass += 1
+                    cloudyWetGrass += 1
+                    total += 1
+                else:
+                    total +=1
+
+
+        elif sprinkler == False and rain == True:
+            if sampleArray[count] < 0.9:
+                if cloudy == True:
+                    cloudyWetGrass += 1
+                total += 1
+
+        elif sprinkler == True and rain == False:
+            if sampleArray[count] < 0.9:
+                if cloudy == True:
+                    cloudySrinklerWetGrass += 1
+                    cloudyWetGrass += 1
+                else:
+                    total += 1
+        count += 1
+        count2 -= 1
+
+
+        cloudy = False
+        sprinkler = False
+        rain = False
+    print "P(s=true|c=true,w=true):"
+    print (cloudySrinklerWetGrass/total)/(cloudyWetGrass/total)
 
 
 def main():
@@ -225,6 +285,7 @@ def main():
     rejection1()
     rejection2()
     rejection3()
+    rejection4()
 
 
 
