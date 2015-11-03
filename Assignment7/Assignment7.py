@@ -118,7 +118,7 @@ def rejection1():
         count += 1
 
     print "Calculated probabilities using Rejection Sampling"
-    print "P(c=true) using rejection sampling:"
+    print "P(c=true):"
     print cloudyCount/100.0
 
 def rejection2():
